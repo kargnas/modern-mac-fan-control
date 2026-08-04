@@ -72,6 +72,22 @@ Download the latest signed DMG from [GitHub Releases](https://github.com/kargnas
 4. Approve **Hot Target.app** in **System Settings → General → Login Items & Extensions**. Hot Target opens that pane for you and floats a chip under the window showing which switch to turn on; the chip disappears on its own once the approval lands.
 5. Hot Target starts holding 60 °C as soon as the approval lands and confirms it in the same chip. Pick a different target under **Maintain Target Temperature** at any time.
 
+### If target temperatures do not take effect
+
+Quit other fan-control applications, then check the helper state:
+
+```bash
+"/Applications/Hot Target.app/Contents/MacOS/hottarget" --helper-status
+```
+
+If it reports `not registered` or `not found`, request registration directly:
+
+```bash
+"/Applications/Hot Target.app/Contents/MacOS/hottarget" --register-helper
+```
+
+`Operation not permitted` followed by `approval required` means registration is waiting for user approval. Enable **Hot Target.app** in **System Settings → General → Login Items & Extensions**, then run `--helper-status` again. `Fan helper: enabled` is the ready state. While target-temperature control is active, `--print-fans` reports manual mode and `~/Library/Logs/hottarget/` receives one CSV sample per second.
+
 ## Automatic updates
 
 Release builds check for updates once per day through Sparkle. A downloaded update is verified with Hot Target's EdDSA key and installed when the app quits. Choose **Check for Updates…** in the status menu to run a manual check at any time.

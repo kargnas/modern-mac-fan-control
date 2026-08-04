@@ -379,7 +379,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
 
         switch helperManager.state {
-        case .notRegistered:
+        case .notRegistered, .notFound:
             helperActionItem.title = "Enable Fan Control…"
             helperActionItem.isEnabled = true
         case .requiresApproval:
@@ -388,9 +388,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         case .enabled:
             helperActionItem.title = "Fan Helper Enabled…"
             helperActionItem.isEnabled = true
-        case .notFound:
-            helperActionItem.title = "Fan Helper Missing"
-            helperActionItem.isEnabled = false
         }
     }
 
@@ -540,7 +537,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func handleHelperAction() {
         switch helperManager.state {
-        case .notRegistered:
+        case .notRegistered, .notFound:
             do {
                 try helperManager.register()
             } catch {
@@ -549,8 +546,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             if helperManager.state == .requiresApproval { helperManager.openApprovalSettings() }
         case .requiresApproval, .enabled:
             helperManager.openApprovalSettings()
-        case .notFound:
-            break
         }
         updateFanItems()
         refreshFans()
